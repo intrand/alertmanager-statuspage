@@ -1,0 +1,35 @@
+---
+apiVersion: app/v1
+kind: Deployment
+metadata:
+  name: alertmanager-statuspage
+  labels:
+    app: alertmanager-statuspage
+spec:
+  template:
+    metadata:
+      labels:
+        app: alertmanager-statuspage
+    spec:
+      containers:
+        - name: alertmanager-statuspage
+          image: intrand/alertmanager-statuspage:2021.04.10.01
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              cpu: 30m
+              memory: 20Mi
+            requests:
+              cpu: 5m
+              memory: 5Mi
+          env:
+            - name: token
+              valueFrom:
+                secretKeyRef:
+                  name: statuspageio
+                  key: token
+            - name: listen_address
+              value: "0.0.0.0:8080" # this is the default
+          ports:
+            - name: http
+              containerPort: 8080
