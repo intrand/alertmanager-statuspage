@@ -1,11 +1,12 @@
 ---
-apiVersion: app/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: alertmanager-statuspage
-  labels:
-    app: alertmanager-statuspage
 spec:
+  selector:
+    matchLabels:
+      app: alertmanager-statuspage
   template:
     metadata:
       labels:
@@ -15,13 +16,7 @@ spec:
         - name: alertmanager-statuspage
           image: intrand/alertmanager-statuspage:2021.04.10.01
           imagePullPolicy: IfNotPresent
-          resources:
-            limits:
-              cpu: 30m
-              memory: 20Mi
-            requests:
-              cpu: 5m
-              memory: 5Mi
+
           env:
             - name: token
               valueFrom:
@@ -30,6 +25,15 @@ spec:
                   key: token
             - name: listen_address
               value: "0.0.0.0:8080" # this is the default
+
           ports:
             - name: http
               containerPort: 8080
+
+          resources:
+            limits:
+              cpu: 30m
+              memory: 20Mi
+            requests:
+              cpu: 5m
+              memory: 5Mi
