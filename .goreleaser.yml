@@ -40,6 +40,20 @@ changelog:
       - "^test:"
 release:
   footer: |
-    # OCI Image
-    
-    `ghcr.io/{{ .Env.orgrepo }}:{{ .Version }}`
+    # OCI image:
+
+    ```
+    {{ .Env.image_name }}
+    ```
+
+    verify signature using `cosign`:
+
+    ```
+    cat <<EOF > cosign.pub
+    {{ .Env.cosignPub }}
+    EOF
+
+    cosign verify --key cosign.pub {{ .Env.image_name }};
+
+    rm -f cosign.pub
+    ```
